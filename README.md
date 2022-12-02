@@ -2,7 +2,7 @@
 
 This repository accompanies the paper
 
-> GENNAPE: Towards Generalized Neural Architecture Performance Estimators\
+> [GENNAPE: Towards Generalized Neural Architecture Performance Estimators](https://arxiv.org/abs/2211.17226)\
 > Keith G. Mills, Fred X. Han, Jialin Zhang, Fabian Chudak, Ali Safari Mamaghani, Mohammad Salameh, Wei Lu, 
 > Shangling Jui and Di Niu\
 > AAAI-23
