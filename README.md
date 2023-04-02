@@ -5,11 +5,12 @@ This repository accompanies the paper
 > [GENNAPE: Towards Generalized Neural Architecture Performance Estimators](https://arxiv.org/abs/2211.17226)\
 > Keith G. Mills, Fred X. Han, Jialin Zhang, Fabian Chudak, Ali Safari Mamaghani, Mohammad Salameh, Wei Lu, 
 > Shangling Jui and Di Niu\
-> AAAI-23
+> AAAI-23 Oral Presentation
 
-
-We provide sample data for our Computation Graphs (CG), the API for loading and visualizing CGs, as well as a sample 
-demo code for the *k*-GNN predictor.
+Specifically, we provide the following:
+- Computation Graph (CG) data caches for all datasets used in the paper.
+- Code API for generating, loading and visualizing CGs.
+- *k*-GNN predictor demo code.
 
 ### Main Dependencies
 ```
@@ -52,3 +53,14 @@ Use the top-level script `run_cg_kgnn_predictor.py`; notable parameters include:
 ### Miscellaneous:
 * The CG API is defined in `/model_src/comp_graph/tf_comp_graph.py`
 * To access CGs directly, `/model_src/predictor/gpi_family_data_manager.py` handles loading CGs from a cache.
+
+### Bibtex 
+If you find our data or CG API useful, we kindly ask that you cite our paper:
+```
+@inproceedings{mills2023gennape,
+  title = {GENNAPE: Towards Generalized Neural Architecture Performance Estimators},
+  author = {Mills, Keith G. and Han, Fred X. and Zhang, Jialin and Chudak, Fabian and Mamaghani, Ali Safari and Salameh, Mohammad and Lu, Wei and Jui, Shangling and Niu, Di},
+  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+  year={2023}
+}
+```
