@@ -57,7 +57,6 @@ def reset_cg_max_HW(input_file, output_file,
 
 
 def _build_cache_ofa_pn_mbv3(output_file, log_f=print):
-    from model_src.predictor.gpi_data_util import load_gpi_ofa_pn_mbv3_src_data
     from model_src.search_space.ofa_profile.networks_tf import OFAMbv3Net, OFAProxylessNet
 
     # Make sure duplicate checking is done before this!
@@ -79,11 +78,15 @@ def _build_cache_ofa_pn_mbv3(output_file, log_f=print):
                                    op2idx, oov_threshold=0.)
         return _cg
 
-    data = load_gpi_ofa_pn_mbv3_src_data()
-    # TODO: consider a chunk write in the case of large data size
+    with open(P_SEP.join([CACHE_DIR, "gpi_ofa_comp_graph_cache.pkl"]), "rb") as f:
+        data = pickle.load(f)
+    filtered_data = []
+    for entry in data:
+        filtered_data.append(tuple([entry['original config'], entry['acc'], entry['flops'], entry['n_params']]))
+
     cache_data = []
     bar = tqdm(total=len(data), desc="Building OFA-PN/MBV3 comp graph cache", ascii=True)
-    for ni, ((res, net_config), acc, flops, n_params) in enumerate(data):
+    for ni, ((res, net_config), acc, flops, n_params) in enumerate(filtered_data):
         net_config_list = copy.deepcopy(net_config)
         if net_config[0][0].startswith("mbconv2"):
             cg = _single_builder(net_config, "OFA-PN-Net{}".format(ni), OFAProxylessNet,
@@ -95,7 +98,7 @@ def _build_cache_ofa_pn_mbv3(output_file, log_f=print):
             raise ValueError("Invalid net configs of OFA: {}".format(net_config))
         cache_data.append({
             "compute graph": cg,
-            "acc": acc / 100.,
+            "acc": acc,
             "flops": flops,
             "n_params": n_params,
             "original config": (res, net_config_list),
@@ -109,7 +112,6 @@ def _build_cache_ofa_pn_mbv3(output_file, log_f=print):
 
 
 def _build_cache_nb301(output_file, log_f=print):
-    from model_src.predictor.gpi_data_util import load_gpi_nb301_src_data
     from model_src.darts.model_darts_tf import cifar10_model_maker
 
     # Make sure duplicate checking is done before this!
@@ -126,15 +128,18 @@ def _build_cache_nb301(output_file, log_f=print):
                                    op2idx, oov_threshold=0.)
         return _cg
 
-    data = load_gpi_nb301_src_data()
-    # TODO: consider a chunk write in the case of large data size
+    with open(P_SEP.join([CACHE_DIR, "gpi_nb301_comp_graph_cache.pkl"]), "rb") as f:
+        data = pickle.load(f)
+    filtered_data = []
+    for entry in data:
+        filtered_data.append(tuple([entry['original config'], entry['acc'], entry['flops'], entry['n_params']]))
     cache_data = []
     bar = tqdm(total=len(data), desc="Building NB301 comp graph cache", ascii=True)
-    for ni, (geno, acc, flops, n_params) in enumerate(data):
+    for ni, (geno, acc, flops, n_params) in enumerate(filtered_data):
         cg = _single_builder(geno, "NB301-Net{}".format(ni), 32, 32)
         cache_data.append({
             "compute graph": cg,
-            "acc": acc / 100.,
+            "acc": acc,
             "flops": flops,
             "n_params": n_params,
             "original config": geno,
@@ -148,7 +153,6 @@ def _build_cache_nb301(output_file, log_f=print):
 
 
 def _build_cache_nb101(output_file, log_f=print):
-    from model_src.predictor.gpi_data_util import load_gpi_nb101_src_data
     from model_src.search_space.nb101.example_nb101 import nb101_model_maker
 
     # Make sure duplicate checking is done before this!
@@ -165,11 +169,15 @@ def _build_cache_nb101(output_file, log_f=print):
                                    op2idx, oov_threshold=0.)
         return _cg
 
-    data = load_gpi_nb101_src_data()
-    # TODO: consider a chunk write in the case of large data size
+    with open(P_SEP.join([CACHE_DIR, "gpi_nb101_comp_graph_cache.pkl"]), "rb") as f:
+        data = pickle.load(f)
+    filtered_data = []
+    for entry in data:
+        filtered_data.append(tuple([entry['original config'], entry['acc'], entry['flops'], entry['n_params']]))
+
     cache_data = []
     bar = tqdm(total=len(data), desc="Building NB101 comp graph cache", ascii=True)
-    for ni, ((ops, adj_mat), acc, flops, n_params) in enumerate(data):
+    for ni, ((ops, adj_mat), acc, flops, n_params) in enumerate(filtered_data):
         cg = _single_builder(ops, adj_mat, "NB101-Net{}".format(ni), 32, 32)
         cache_data.append({
             "compute graph": cg,
@@ -187,12 +195,10 @@ def _build_cache_nb101(output_file, log_f=print):
 
 
 def _build_cache_nb201(output_file,
-                       src_file=P_SEP.join([CACHE_DIR, "gpi_nb201c10_src_data.pkl"]),
                        n_classes=10, H=32, W=32, log_f=print):
-    from model_src.predictor.gpi_data_util import load_gpi_nb201_src_data
     from model_src.search_space.nb201.networks_tf import NB201Net
 
-    log_f("Building NB201 comp graph cache from {}".format(src_file))
+    log_f("Building NB201 comp graph cache")
     log_f("Number of classes: {}".format(n_classes))
     log_f("H: {}, W: {}".format(H, W))
 
@@ -215,10 +221,15 @@ def _build_cache_nb201(output_file,
         assert len(_cg.nodes) > 10, "Found potentially invalid cg: {}, ops: {}".format(str(_cg), _ops)
         return _cg
 
-    data = load_gpi_nb201_src_data(src_file)
+    with open(P_SEP.join([CACHE_DIR, "gpi_nb201c10_comp_graph_cache.pkl"]), "rb") as f:
+        data = pickle.load(f)
+    filtered_data = []
+    for entry in data:
+        filtered_data.append(tuple([entry['original config'], entry['acc'], entry['flops']]))
+
     cache_data = []
     bar = tqdm(total=len(data), desc="Building NB201 comp graph cache", ascii=True)
-    for ni, ((ops, op_input_inds), acc, flops) in enumerate(data):
+    for ni, ((ops, op_input_inds), acc, flops) in enumerate(filtered_data):
         cg = _single_builder(ops, op_input_inds, "NB201-Net{}".format(ni), H, W)
         cache_data.append({
             "compute graph": cg,
@@ -235,7 +246,6 @@ def _build_cache_nb201(output_file,
 
 
 def _build_cache_ofa_resnet(output_file, log_f=print):
-    from model_src.predictor.gpi_data_util import load_gpi_ofa_resnet_src_data
     from model_src.search_space.ofa_profile.networks_tf import OFAResNet
 
     op2idx = OP2I().build_from_file()
@@ -256,17 +266,20 @@ def _build_cache_ofa_resnet(output_file, log_f=print):
                                    op2idx, oov_threshold=0.)
         return _cg
 
-    data = load_gpi_ofa_resnet_src_data()
-    # TODO: consider a chunk write in the case of large data size
+    with open(P_SEP.join([CACHE_DIR, "gpi_ofa_resnet_comp_graph_cache.pkl"]), "rb") as f:
+        data = pickle.load(f)
+    filtered_data = []
+    for entry in data:
+        filtered_data.append(tuple([entry['original config'], entry['acc'], entry['flops'], entry['n_params']]))
     cache_data = []
     bar = tqdm(total=len(data), desc="Building OFA-ResNet comp graph cache", ascii=True)
-    for ni, ((res, net_config), acc, flops, n_params) in enumerate(data):
+    for ni, ((res, net_config), acc, flops, n_params) in enumerate(filtered_data):
         cg = _single_builder(copy.deepcopy(net_config),
                              "OFA-ResNet{}".format(ni), OFAResNet,
                              res, res)
         cache_data.append({
             "compute graph": cg,
-            "acc": acc / 100.,
+            "acc": acc,
             "flops": flops,
             "n_params": n_params,
             "original config": (res, net_config),
@@ -299,48 +312,6 @@ class FamilyDataManager:
     def get_cache_file_path(self, family):
         return P_SEP.join([self.cache_dir, "gpi_{}_comp_graph_cache.pkl".format(family)])
 
-    def _build_cache(self, family, cache_file):
-        if family.lower() == "ofa": # TODO: re-factor to remove ifs
-            _build_cache_ofa_pn_mbv3(cache_file, self.log_f)
-        elif family.lower() == "ofa_resnet":
-            _build_cache_ofa_resnet(cache_file, self.log_f)
-        elif family.lower() == "nb301":
-            _build_cache_nb301(cache_file, self.log_f)
-        elif family.lower() == "nb101":
-            _build_cache_nb101(cache_file, self.log_f)
-        elif family.lower() == "nb201c10": # Only 4096 instances
-            _build_cache_nb201(cache_file,
-                               src_file=P_SEP.join([CACHE_DIR, "gpi_nb201c10_src_data.pkl"]),
-                               n_classes=10, H=32, W=32,
-                               log_f=self.log_f)
-        elif family.lower() == "nb201c100": # Only 4096 instances
-            _build_cache_nb201(cache_file, 
-                               src_file=P_SEP.join([CACHE_DIR, "gpi_nb201c100_src_data.pkl"]),
-                               n_classes=100,H=32, W=32,
-                               log_f=self.log_f)
-        elif family.lower() == "nb201imgnet": # Only 4096 instances
-            _build_cache_nb201(cache_file,
-                               src_file=P_SEP.join([CACHE_DIR, "gpi_nb201imgnet_src_data.pkl"]),
-                               n_classes=120, H=16, W=16,
-                               log_f=self.log_f)
-        elif family.lower() == "nb201c10_complete": # Full 15k instances
-            _build_cache_nb201(cache_file,
-                               src_file=P_SEP.join([CACHE_DIR, "gpi_nb201c10_complete_src_data.pkl"]),
-                               n_classes=10, H=32, W=32,
-                               log_f=self.log_f)
-        elif family.lower() == "nb201c100_complete": # Full 15k instances
-            _build_cache_nb201(cache_file,
-                               src_file=P_SEP.join([CACHE_DIR, "gpi_nb201c100_complete_src_data.pkl"]),
-                               n_classes=100, H=32, W=32,
-                               log_f=self.log_f)
-        elif family.lower() == "nb201imgnet_complete": # Full 15k instances
-            _build_cache_nb201(cache_file,
-                               src_file=P_SEP.join([CACHE_DIR, "gpi_nb201imgnet_complete_src_data.pkl"]),
-                               n_classes=120, H=16, W=16,
-                               log_f=self.log_f)
-        else:
-            raise ValueError("Unknown family: {}".format(family))
-
     def validate_cache(self):
         # If compute graph cache is not available for some families, build it
         for f in self.families:
@@ -354,8 +325,8 @@ class FamilyDataManager:
 
             cache_file = self.get_cache_file_path(f)
             if not os.path.isfile(cache_file):
-                self.log_f("Building cache for {}".format(f))
-                self._build_cache(f, cache_file)
+                import errno
+                raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), cache_file)
 
         self.log_f("Cache validated for {}".format(self.families))
 

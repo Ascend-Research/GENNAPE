@@ -1,5 +1,18 @@
 # Towards Generalized Neural Architecture Performance Estimators
 
+<p align="center">
+    <a href="https://aaai.org/Conferences/AAAI-23/" alt="Conference">
+        <img src="https://img.shields.io/badge/AAAI'23-blue" /></a>
+    <a href="https://github.com/Ascend-Research/GENNAPE/blob/master/LICENSE" alt="License">
+        <img src="https://img.shields.io/badge/License-MIT-purple" /></a>
+    <a href="https://www.python.org/" alt="Python">
+        <img src="https://img.shields.io/badge/Python-3.7-yellow" /></a>
+    <a href="https://pytorch.org/" alt="PyTorch">
+        <img src="https://img.shields.io/badge/PyTorch-1.8-orange" /></a>
+    <a href="https://www.tensorflow.org/" alt="TensorFlow">
+        <img src="https://img.shields.io/badge/TensorFlow-1.15-darkred" /></a>
+<p/>
+
 This repository accompanies the paper
 
 > [GENNAPE: Towards Generalized Neural Architecture Performance Estimators](https://arxiv.org/abs/2211.17226)\
@@ -10,6 +23,7 @@ This repository accompanies the paper
 Specifically, we provide the following:
 - Computation Graph (CG) data caches for all datasets used in the paper.
 - Code API for generating, loading and visualizing CGs.
+- Code for generating additional NAS-Benchmark and Once-for-All CGs
 - *k*-GNN predictor demo code.
 
 ### Main Dependencies
@@ -49,6 +63,11 @@ Use the top-level script `run_cg_kgnn_predictor.py`; notable parameters include:
 ### Generation of new CGs from TensorFlow protobuf `.pb` families
 * See `make_cg.py` for an example.
 * We provide sample `.pb` files for EfficientNet-b0 and ResNet18 on the [public google drive folder](https://drive.google.com/drive/folders/1nTj8g6XbIU_PYvOBaXjylBHmgo-3okra). You can use this script to make CGs and print pictures of them, then compare to what the `.pb` of the model looks like in [Netron](https://netron.app/).
+
+### Generating NAS-Bench and Once-for-All CGs beyond what is provided in our caches
+* Our caches consist of architectures we randomly sampled from each search space (except NB-201).
+* Some users may want to make CGs of other architectures in these search spaces
+* We provide the necessary code to do so in this repo, please see `gen_demo_caches.py` for details on each family.
 
 ### Miscellaneous:
 * The CG API is defined in `/model_src/comp_graph/tf_comp_graph.py`
