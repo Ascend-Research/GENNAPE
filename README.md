@@ -24,6 +24,7 @@ Specifically, we provide the following:
 - Computation Graph (CG) data caches for all datasets used in the paper.
 - Code API for generating, loading and visualizing CGs.
 - Code for generating additional NAS-Benchmark and Once-for-All CGs
+- Code for generating HiAML, Inception and Two-Path CGs
 - *k*-GNN predictor demo code.
 
 ### Main Dependencies
@@ -68,6 +69,9 @@ Use the top-level script `run_cg_kgnn_predictor.py`; notable parameters include:
 * Our caches consist of architectures we randomly sampled from each search space (except NB-201).
 * Some users may want to make CGs of other architectures in these search spaces
 * We provide the necessary code to do so in this repo, please see `gen_demo_caches.py` for details on each family.
+
+### Generating HiAML, Inception and Two-Path CGs
+* See `make_new_family_cgs.py`
 
 ### Miscellaneous:
 * The CG API is defined in `/model_src/comp_graph/tf_comp_graph.py`
