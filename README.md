@@ -20,6 +20,8 @@ This repository accompanies the paper
 > Shangling Jui and Di Niu\
 > AAAI-23 Oral Presentation
 
+[[Poster](https://kgmills.github.io/assets/posters/GENNAPE_AAAI23_poster.pdf)][[Video](https://underline.io/events/380/sessions/14509/lecture/67942-gennape-towards-generalized-neural-architecture-performance-estimators)][[Slides](https://kgmills.github.io/assets/slides/GENNAPE_AAAI23_slides.pdf)]
+
 Specifically, we provide the following:
 - Computation Graph (CG) data caches for all datasets used in the paper.
 - Code API for generating, loading and visualizing CGs.
