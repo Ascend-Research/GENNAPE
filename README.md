@@ -40,7 +40,7 @@ graphviz
 See `requirements.txt` for more specifics
 
 ### Setting Up The Repository
-1. Download and unpack CG_data.zip from the [public google drive folder](https://drive.google.com/drive/folders/1nTj8g6XbIU_PYvOBaXjylBHmgo-3okra)
+1. Download and unpack CG_data.zip from the ~~[public google drive folder](https://drive.google.com/drive/folders/1nTj8g6XbIU_PYvOBaXjylBHmgo-3okra)~~ [HuggingFace](https://huggingface.co/datasets/kgmills/GENNAPE/tree/main)
 2. Copy the `cache` and `data` folders to the top-level of this directory.
     * `cache` contains the CG files for the NAS-Bench (101, 201 and 301) as well as OFA (PN, MBv3 and ResNet-50) families.
     * `data` contains the CG files for the HiAML, Inception and Two-Path families.
@@ -65,7 +65,7 @@ Use the top-level script `run_cg_kgnn_predictor.py`; notable parameters include:
 
 ### Generation of new CGs from TensorFlow protobuf `.pb` families
 * See `make_cg.py` for an example.
-* We provide sample `.pb` files for EfficientNet-b0 and ResNet18 on the [public google drive folder](https://drive.google.com/drive/folders/1nTj8g6XbIU_PYvOBaXjylBHmgo-3okra). You can use this script to make CGs and print pictures of them, then compare to what the `.pb` of the model looks like in [Netron](https://netron.app/).
+* We provide sample `.pb` files for EfficientNet-b0 and ResNet18 on [HuggingFace](https://huggingface.co/datasets/kgmills/GENNAPE/tree/main). You can use this script to make CGs and print pictures of them, then compare to what the `.pb` of the model looks like in [Netron](https://netron.app/).
 
 ### Generating NAS-Bench and Once-for-All CGs beyond what is provided in our caches
 * Our caches consist of architectures we randomly sampled from each search space (except NB-201).
